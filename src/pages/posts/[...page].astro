@@ -1,0 +1,94 @@
+---
+import type { CollectionEntry } from "astro:content";
+import { getCollection } from "astro:content";
+import { CONFIG } from "@/config";
+import BaseLayout from "@/layouts/BaseLayout.astro";
+import { reformatDate, sortItemsByDateDesc } from "@/lib";
+
+export async function getStaticPaths() {
+	const posts = (await getCollection("blog")).sort(sortItemsByDateDesc);
+	const { categories } = CONFIG;
+	return categories.map(({ page }) => ({
+		params: { page },
+		props: {
+			posts: page
+				? posts.filter((post: CollectionEntry<"blog">) =>
+						post.data.category?.includes(page),
+					)
+				: posts,
+			currentPage: page,
+		},
+	}));
+}
+
+const { posts, currentPage } = Astro.props;
+---
+
+<BaseLayout
+  title="Blog"
+  description="Embark on a journey of personal insights and experiences through my blog"
+>
+<div class="grid grid-cols-1 gap-10 pb-10 w-full">
+    <div class="flex flex-col">
+      <a href="/"
+      class="flex flex-row space-x-2 items-center group cursor-pointer mb-4 animate-slide-from-down-and-fade-1"
+      >
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          width="16"
+          height="16"
+          viewBox="0 0 16 16"
+          class="text-secondaryDarker group-hover:-translate-x-1 duration-200 rotate-180"
+        >
+          <path
+            fill="currentColor"
+            fill="evenodd"
+            d="M1.25 8A.75.75 0 0 1 2 7.25h10.19L9.47 4.53a.75.75 0 0 1 1.06-1.06l4 4a.75.75 0 0 1 0 1.06l-4 4a.75.75 0 1 1-1.06-1.06l2.72-2.72H2A.75.75 0 0 1 1.25 8"
+            clip="evenodd"></path>
+        </svg>
+        <span class="text-secondaryDarker">Back</span>
+      </a>
+      <span class="text-4xl font-bold mb-6 md:mb-4 animate-slide-from-down-and-fade-2"> All Posts </span>
+      <div class="flex flex-row space-x-4 mb-6 md:mb-4 text-sm  overflow-x-auto line-clamp-1 text-nowrap animate-slide-from-down-and-fade-3">
+        {
+          CONFIG.categories.map(({ page, title, href }) => (
+            <a
+              href={href}
+              class={`${currentPage === page ? 'text-secondaryDark underline' : 'text-secondaryDarker'} hover:text-secondaryDark duration-200 hover:underline`}
+          > {title} </a>
+          ))
+        }
+      </div>
+      <div>
+        <div class="grid grid-cols-1 gap-6 md:gap-1 md:-px-2 animate-slide-from-down-and-fade-3">
+          {
+            posts
+              .sort((a: any, b: any) => {
+                if (
+                  new Date(a.data.publishedAt) > new Date(b.data.publishedAt)
+                ) {
+                  return -1;
+                }
+                return 1;
+              })
+              .map((post: any) => {
+                return (
+                  <a href={`/posts/${post.slug}`}
+                  class="flex flex-row space-x-2 justify-between items-start duration-300 md:hover:bg-hoverBackground -mx-4 p-4 rounded-lg cursor-pointer"
+                  >
+                    <span class="text-secondaryDark">{post.data.title}</span>
+
+                    <div class="flex flex-row space-x-2 items-center text-secondaryDarker whitespace-nowrap">
+                      <span>
+                        {reformatDate(post.data.publishedAt)}
+                      </span>
+                    </div>
+                  </a>
+                );
+              })
+          }
+        </div>
+      </div>
+    </div>
+  </div>
+</BaseLayout>

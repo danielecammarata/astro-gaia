@@ -1,0 +1,24 @@
+---
+import { ViewTransitions } from "astro:transitions";
+import BaseHead from "../components/BaseHead.astro";
+const { ...head } = Astro.props;
+---
+
+<!doctype html>
+<html lang="en" class="antialiased break-words">
+    <head>
+        <meta name="viewport" content="width=device-width, user-scalable=no" />
+        <BaseHead {...head} />
+        <ViewTransitions />
+    </head>
+    <body class="bg-primary text-secondary text-sm md:text-base">
+        <main class="min-h-screen flex flex-col items-center">
+            <div class="mx-auto w-full max-w-3xl px-4 lg:px-20 pt-4 md:pt-10">
+                <div class="flex-1 w-full flex flex-col gap-8 items-center">
+                    <slot />
+                </div>
+            </div>
+        </main>
+        <div class="pointer-events-none bg-primary fixed bottom-0 left-0 h-28 [mask-image:linear-gradient(transparent,#000000)] w-full"></div>
+    </body>
+</html>

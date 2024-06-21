@@ -1,0 +1,24 @@
+---
+import { SocialTooltip } from "@/components/ui/social-with-tooltip";
+import { CONFIG } from "@/config";
+---
+
+<header class="flex flex-row justify-between  items-center space-y-0 w-full md:px-6 max-w-3xl animate-slide-from-down-and-fade-1">
+  <div class="flex flex-row items-center space-x-3">
+    <img
+      src={CONFIG.headshot}
+      alt=`${CONFIG.name} headshot`
+      width={100}
+      height={100}
+      class="rounded-full h-[48px] w-[48px]"
+    />
+    <div class="flex flex-col">
+      <span class="font-semibold">{CONFIG.name}</span>
+      <span class="text-neutral-400">{CONFIG.title}</span>
+    </div>
+  </div>
+  <!-- Desktop -->
+  <div class="hidden md:flex flex-row space-x-2">
+    <SocialTooltip />
+  </div>
+</header>

@@ -1,0 +1,63 @@
+---
+import { type CollectionEntry, getCollection } from "astro:content";
+import { CONFIG } from "@/config";
+import BaseLayout from "@/layouts/BaseLayout.astro";
+import { reformatDate, sortItemsByDateDesc } from "@/lib";
+
+export async function getStaticPaths() {
+	const posts = (await getCollection("blog")).sort(sortItemsByDateDesc);
+	const postCount = posts.length;
+	return posts.map((post, index) => ({
+		params: { slug: post.slug },
+		props: {
+			post,
+			prevPost: index + 1 !== postCount ? posts[index + 1] : null,
+			nextPost: index !== 0 ? posts[index - 1] : null,
+		},
+	}));
+}
+
+type Props = { post: CollectionEntry<"blog"> };
+const { post } = Astro.props;
+const { Content } = await post.render();
+---
+<BaseLayout description={CONFIG.meta.description}>
+<div class="w-full pb-20">
+  <div class="flex flex-row space-x-4 mb-6 text-sm text-secondaryDarker animate-slide-from-down-and-fade-1">
+    <a
+      href="/posts"
+      class="flex flex-row space-x-2 items-center group cursor-pointer"
+    >
+      <svg
+        xmlns="http://www.w3.org/2000/svg"
+        width="16"
+        height="16"
+        viewBox="0 0 16 16"
+        class="text-secondaryDarker group-hover:-translate-x-1 duration-200 rotate-180"
+      >
+        <path
+          fill="currentColor"
+          fill="evenodd"
+          d="M1.25 8A.75.75 0 0 1 2 7.25h10.19L9.47 4.53a.75.75 0 0 1 1.06-1.06l4 4a.75.75 0 0 1 0 1.06l-4 4a.75.75 0 1 1-1.06-1.06l2.72-2.72H2A.75.75 0 0 1 1.25 8"
+          clip="evenodd"
+        />
+      </svg>
+      <span class="text-secondaryDarker">Back to all posts</span>
+    </a>
+  </div>
+  <h1 class="title font-bold text-3xl tracking-tighter max-w-[650px] animate-slide-from-down-and-fade-2">
+    {post.data.title}
+  </h1>
+  <article class="prose prose-invert pb-10 animate-slide-from-down-and-fade-4 my-8">
+    <Content />
+  </article>
+  <div class="flex justify-center items-center text-sm max-w-[650px] animate-slide-from-down-and-fade-3">
+    <span class="text-secondaryDark">
+      Published: {reformatDate(post.data.publishedAt)}
+    </span>
+  </div>
+  <div class="flex w-full items-center justify-center  my-6  animate-slide-from-down-and-fade-4">
+    <span class="w-8 bg-secondaryDarker h-[1px] rounded-full"></span>
+  </div>
+</div>
+</BaseLayout>

@@ -1,0 +1,156 @@
+---
+title: 'Building a Vue.js Project: My Journey with Travel Tracker'
+publishedAt: '2024-03-12'
+category: 'tech'
+isFeatured: true
+tags:
+    - javascript
+    - vue.js
+---
+
+![Travel Tracker](/images/travel-tracker/1.jpg "Travel Tracker")
+
+## Introduction
+
+Hello, everyone! I'm Gaia Rossi, and today I want to share my latest project built with Vue.js: Travel Tracker. As a front-end developer, I'm always looking for new ways to enhance user experiences and create functional, beautiful applications. Vue.js has been one of my favorite frameworks to work with, and this project was a perfect opportunity to dive deeper into its capabilities. Join me as I walk you through the development process and features of Travel Tracker.
+
+## Project Overview
+
+### What is Travel Tracker?
+
+Travel Tracker is a web application designed to help users document and manage their travel experiences. Users can add trips, upload photos, write travel diaries, and track visited locations on a map. The goal was to create an intuitive and engaging interface that makes it easy for travelers to keep a digital record of their adventures.
+
+## Why Vue.js?
+
+### Choosing the Framework
+
+I chose Vue.js for this project because of its flexibility, ease of integration, and robust ecosystem. Vue.js allows for a component-based architecture, making it ideal for building scalable and maintainable applications. Its reactivity system and simple API make it a joy to work with, especially for dynamic and interactive user interfaces.
+
+## Development Process
+
+### Setting Up the Project
+
+I started by setting up the project using Vue CLI. This tool provides a quick and easy way to scaffold a new Vue.js project with all the necessary configurations.
+
+```bash
+vue create travel-tracker
+```
+
+### Building Components
+
+Travel Tracker consists of several key components, each responsible for different parts of the application:
+
+- **TripList.vue**: Displays a list of all trips.
+- **TripDetail.vue**: Shows detailed information about a specific trip.
+- **AddTrip.vue**: A form for adding new trips.
+- **Map.vue**: Integrates with the Google Maps API to display visited locations.
+
+Here's a snippet of the `TripList.vue` component:
+
+```vue
+<template>
+  <div class="trip-list">
+    <h2>My Trips</h2>
+    <ul>
+      <li v-for="trip in trips" :key="trip.id">
+        <router-link :to="{ name: 'TripDetail', params: { id: trip.id } }">
+          {{ trip.name }}
+        </router-link>
+      </li>
+    </ul>
+  </div>
+</template>
+
+<script>
+export default {
+  data() {
+    return {
+      trips: [
+        { id: 1, name: "Trip to Japan" },
+        { id: 2, name: "Sweden Adventure" },
+        { id: 3, name: "Brazilian Getaway" }
+      ]
+    };
+  }
+};
+</script>
+
+<style scoped>
+.trip-list {
+  margin: 20px;
+}
+</style>
+```
+
+### State Management with Vuex
+
+To manage the application's state, I used Vuex, Vue's official state management library. Vuex allowed me to centralize the state and make it easily accessible across components. This was particularly useful for handling user authentication and trip data.
+
+```javascript
+import Vue from 'vue';
+import Vuex from 'vuex';
+
+Vue.use(Vuex);
+
+export default new Vuex.Store({
+  state: {
+    user: null,
+    trips: []
+  },
+  mutations: {
+    setUser(state, user) {
+      state.user = user;
+    },
+    setTrips(state, trips) {
+      state.trips = trips;
+    },
+    addTrip(state, trip) {
+      state.trips.push(trip);
+    }
+  },
+  actions: {
+    fetchTrips({ commit }) {
+      // Simulate API call
+      const trips = [
+        { id: 1, name: "Trip to Japan" },
+        { id: 2, name: "Sweden Adventure" },
+        { id: 3, name: "Brazilian Getaway" }
+      ];
+      commit('setTrips', trips);
+    }
+  },
+  getters: {
+    user: state => state.user,
+    trips: state => state.trips
+  }
+});
+```
+
+### Integrating with APIs
+
+To enhance functionality, I integrated Travel Tracker with various APIs:
+
+- **Google Maps API**: For displaying and interacting with maps.
+- **Firebase**: For user authentication and database storage.
+
+### Adding Styles
+
+For styling, I used a combination of CSS and Vuetify, a popular Vue.js UI library. Vuetify provided a range of pre-designed components, which helped speed up the development process and ensured a consistent look and feel.
+
+## Challenges and Learnings
+
+### Handling Asynchronous Data
+
+One of the challenges I faced was handling asynchronous data, especially when fetching trip information from the server. Using Vue's lifecycle hooks and Vuex actions, I was able to manage data loading efficiently and provide a smooth user experience.
+
+### Optimizing Performance
+
+As the application grew, optimizing performance became crucial. Lazy loading components and using Vue's built-in features like computed properties helped improve performance and responsiveness.
+
+## Conclusion
+
+Building Travel Tracker with Vue.js was an exciting and rewarding experience. The framework's versatility and ease of use allowed me to bring my vision to life and create a functional, engaging application. I'm excited to continue exploring Vue.js and applying the knowledge I've gained to future projects.
+
+Thank you for reading about my journey with Travel Tracker! If you have any questions or want to share your own Vue.js experiences, feel free to leave a comment below.
+
+Happy coding!

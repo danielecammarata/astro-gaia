@@ -1,0 +1,168 @@
+---
+import { getCollection } from "astro:content";
+import Header from "@/components/Header.astro";
+import { CONFIG } from "@/config";
+import BaseLayout from "@/layouts/BaseLayout.astro";
+import { reformatDate, sortItemsByDateDesc } from "@/lib";
+
+const posts = (await getCollection("blog")).sort(sortItemsByDateDesc);
+const featuredBlogPosts = posts.filter(
+	({ data }) => data.isFeatured && data.category === "tech",
+);
+const featuredFoodPosts = posts.filter(
+	({ data }) => data.isFeatured && data.category === "food",
+);
+const featuredTravelPosts = posts.filter(
+	({ data }) => data.isFeatured && data.category === "travel",
+);
+---
+
+<BaseLayout description={CONFIG.meta.description}>
+  <Header />
+  <div class="flex flex-col space-y-6 md:space-y-12 pb-8 pt-4">
+    <div class="flex flex-col md:px-6 animate-slide-from-down-and-fade-2">
+      <div class="flex flex-col space-y-2">
+        <span class="font-semibold">About me</span>
+        <span class="text-neutral-300/80 leading-6">
+          {CONFIG.description}
+        </span>
+      </div>
+    </div>
+
+    <div class="flex flex-col space-y-6 md:space-y-12">
+
+			{/* Posts */}
+      <div class="flex flex-col space-y-4 animate-slide-from-down-and-fade-4">
+        <div class="flex flex-col space-y-2">
+          <span class="font-semibold md:px-6">Featured Posts</span>
+          <div class="flex flex-col space-y-8 md:space-y-1 md:px-2">
+            {
+              featuredBlogPosts
+                .filter((post) => post.data.isFeatured === true)
+                .sort((a, b) => {
+                  if (
+                    new Date(a.data.publishedAt) > new Date(b.data.publishedAt)
+                  ) {
+                    return -1;
+                  }
+                  return 1;
+                })
+                .slice(0, 3)
+                .map((post) => (
+                  <a
+                    href={`/posts/${post.slug}`}
+                    class="flex flex-row justify-between space-x-2 items-start md:items-center duration-300 md:hover:bg-hoverBackground md:px-4 md:py-3 rounded-lg cursor-pointer"
+                  >
+                    <span class="text-secondaryDark">{post.data.title}</span>
+
+                    <span class="text-neutral-400 text-sm whitespace-nowrap">
+                      {reformatDate(post.data.publishedAt)}
+                    </span>
+                  </a>
+                ))
+            }
+          </div>
+        </div>
+        <a
+          href="/posts"
+          class="flex flex-row space-x-2 items-center md:px-6 group cursor-pointer justify-end"
+        >
+          <span
+            class="text-neutral-400 text-sm underline underline-offset-4 hover:text-secondary duration-200"
+          >
+            All Posts
+          </span>
+        </a>
+      </div>
+
+			{/* Food */}
+      <div class="flex flex-col space-y-4 animate-slide-from-down-and-fade-4">
+        <div class="flex flex-col space-y-2">
+          <span class="font-semibold md:px-6">Cousine</span>
+          <div class="flex flex-col space-y-8 md:space-y-1 md:px-2">
+            {
+              featuredFoodPosts
+                .filter((post) => post.data.isFeatured === true)
+                .sort((a, b) => {
+                  if (
+                    new Date(a.data.publishedAt) > new Date(b.data.publishedAt)
+                  ) {
+                    return -1;
+                  }
+                  return 1;
+                })
+                .slice(0, 3)
+                .map((post) => (
+                  <a
+                    href={`/posts/${post.slug}`}
+                    class="flex flex-row justify-between space-x-2 items-start md:items-center duration-300 md:hover:bg-hoverBackground md:px-4 md:py-3 rounded-lg cursor-pointer"
+                  >
+                    <span class="text-secondaryDark">{post.data.title}</span>
+
+                    <span class="text-neutral-400 text-sm whitespace-nowrap">
+                      {reformatDate(post.data.publishedAt)}
+                    </span>
+                  </a>
+                ))
+            }
+          </div>
+        </div>
+        <a
+          href="/posts"
+          class="flex flex-row space-x-2 items-center md:px-6 group cursor-pointer justify-end"
+        >
+          <span
+            class="text-neutral-400 text-sm underline underline-offset-4 hover:text-secondary duration-200"
+          >
+            All Posts
+          </span>
+        </a>
+      </div>
+
+			{/* Travels */}
+      <div class="flex flex-col space-y-4 animate-slide-from-down-and-fade-4">
+        <div class="flex flex-col space-y-2">
+          <span class="font-semibold md:px-6">My travels</span>
+          <div class="flex flex-col space-y-8 md:space-y-1 md:px-2">
+            {
+              featuredTravelPosts
+                .filter((post) => post.data.isFeatured === true)
+                .sort((a, b) => {
+                  if (
+                    new Date(a.data.publishedAt) > new Date(b.data.publishedAt)
+                  ) {
+                    return -1;
+                  }
+                  return 1;
+                })
+                .slice(0, 3)
+                .map((post) => (
+                  <a
+                    href={`/posts/${post.slug}`}
+                    class="flex flex-row justify-between space-x-2 items-start md:items-center duration-300 md:hover:bg-hoverBackground md:px-4 md:py-3 rounded-lg cursor-pointer"
+                  >
+                    <span class="text-secondaryDark">{post.data.title}</span>
+
+                    <span class="text-neutral-400 text-sm whitespace-nowrap">
+                      {reformatDate(post.data.publishedAt)}
+                    </span>
+                  </a>
+                ))
+            }
+          </div>
+        </div>
+        <a
+          href="/posts"
+          class="flex flex-row space-x-2 items-center md:px-6 group cursor-pointer justify-end"
+        >
+          <span
+            class="text-neutral-400 text-sm underline underline-offset-4 hover:text-secondary duration-200"
+          >
+            All Posts
+          </span>
+        </a>
+      </div>
+
+    </div>
+  </div>
+</BaseLayout>

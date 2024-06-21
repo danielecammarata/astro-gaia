@@ -1,0 +1,137 @@
+---
+title: 'Mastering Advanced HTML: The Power of Web Components'
+publishedAt: '2024-04-03'
+category: 'tech'
+isFeatured: true
+tags:
+    - html
+    - webcomponents
+---
+
+## Introduction
+
+Hello, everyone! I'm Gaia Rossi, and today I want to delve into an advanced technique in HTML that has been transforming the way we build web applications: Web Components. As a front-end developer passionate about creating modular and reusable code, Web Components have become an essential part of my toolkit. Join me as I explore the intricacies of Web Components and how they can enhance your web development projects.
+
+## What are Web Components?
+
+Web Components are a set of web platform APIs that allow you to create custom, reusable, and encapsulated HTML elements. They consist of three main technologies:
+
+1. **Custom Elements**: Define new HTML elements.
+2. **Shadow DOM**: Encapsulate the internal structure and style of your elements.
+3. **HTML Templates**: Define reusable HTML markup.
+
+Together, these technologies enable you to build self-contained components that can be used across your applications, promoting code reuse and maintainability.
+
+## Creating a Custom Element
+
+### Step 1: Define the Template
+
+The first step in creating a Web Component is to define its template. This includes the HTML structure and styles encapsulated within the component.
+
+```html
+<template id="my-card-template">
+  <style>
+    .card {
+      border: 1px solid #ccc;
+      padding: 16px;
+      border-radius: 8px;
+      box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+    }
+    .card-header {
+      font-size: 1.5em;
+      margin-bottom: 8px;
+    }
+    .card-content {
+      font-size: 1em;
+    }
+  </style>
+  <div class="card">
+    <div class="card-header"></div>
+    <div class="card-content"></div>
+  </div>
+</template>
+```
+
+### Step 2: Define the Custom Element
+
+Next, we define the custom element by creating a class that extends `HTMLElement` and attaching the shadow DOM.
+
+```javascript
+class MyCard extends HTMLElement {
+  constructor() {
+    super();
+    const template = document.getElementById('my-card-template').content;
+    const shadowRoot = this.attachShadow({ mode: 'open' });
+    shadowRoot.appendChild(template.cloneNode(true));
+  }
+
+  connectedCallback() {
+    this.shadowRoot.querySelector('.card-header').textContent = this.getAttribute('header');
+    this.shadowRoot.querySelector('.card-content').textContent = this.getAttribute('content');
+  }
+}
+
+customElements.define('my-card', MyCard);
+```
+
+### Step 3: Use the Custom Element
+
+Finally, we can use our custom element in the HTML of our application.
+
+```html
+<my-card header="Hello World" content="This is an example of a Web Component."></my-card>
+```
+
+## Advanced Techniques
+
+### 1. Lifecycle Callbacks
+
+Custom elements have lifecycle callbacks that allow you to respond to changes in their lifecycle.
+
+- **connectedCallback**: Invoked when the element is added to the document.
+- **disconnectedCallback**: Invoked when the element is removed from the document.
+- **attributeChangedCallback**: Invoked when an attribute of the element is added, removed, or changed.
+
+### 2. Attribute and Property Reflection
+
+To make your custom elements more dynamic, you can use attribute and property reflection. This ensures that changes to attributes are reflected in properties and vice versa.
+
+```javascript
+static get observedAttributes() {
+  return ['header', 'content'];
+}
+
+attributeChangedCallback(name, oldValue, newValue) {
+  if (oldValue !== newValue) {
+    this[name] = newValue;
+  }
+}
+```
+
+### 3. Shadow DOM Styling
+
+Styling components with Shadow DOM can be tricky due to encapsulation. However, you can still style slots and use `::slotted` selectors to apply styles to slotted content.
+
+```css
+::slotted(h1) {
+  color: blue;
+}
+```
+
+### 4. Event Handling
+
+Custom elements can dispatch and listen to events just like regular HTML elements. This is useful for creating interactive components.
+
+```javascript
+this.addEventListener('click', () => {
+  console.log('Card clicked!');
+});
+```
+
+## Conclusion
+
+Web Components represent a powerful advancement in HTML that promotes modularity, reusability, and encapsulation in web development. By mastering custom elements, Shadow DOM, and HTML templates, you can create sophisticated, maintainable, and scalable web applications. I hope this deep dive into Web Components has inspired you to explore and implement them in your own projects.
+
+Thank you for joining me on this journey into advanced HTML! If you have any questions or want to share your own experiences with Web Components, feel free to leave a comment below.
+
+Happy coding!
